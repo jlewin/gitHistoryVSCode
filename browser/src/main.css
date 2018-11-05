@@ -106,6 +106,7 @@ div.appRoot {
 	position: absolute;
 	top: 0;
 	left: 0;
+	z-index: 100;
 }
 
 #log-view svg.commitGraph,
@@ -126,9 +127,9 @@ div.appRoot {
 }
 
 .log-entry {
-	padding: 0.5em;
+	padding: 0.2em;
 	position: relative;
-	border-bottom: 1px solid hsla(0, 0%, 100%, 0.3);
+	border-bottom: 1px solid hsla(0, 0%, 100%, 0.1);
 }
 
 .log-entry .media-content {
@@ -194,9 +195,15 @@ div.appRoot {
 	margin-top: 0.2em;
 	position: relative;
 	white-space: nowrap;
-	display: block;
+	display: inline-block;
 	text-overflow: ellipsis;
 	overflow: hidden;
+}
+
+.commit-date,
+.commit-authoronly {
+	display: inline-block;
+	font-size: 0.8em;
 }
 
 .commit-author .timestamp {
@@ -204,10 +211,15 @@ div.appRoot {
 }
 
 .commit-hash-container {
-	background-color: hsla(204, 80%, 40%, 1);
+	background-color: rgb(77, 77, 77);
 	white-space: nowrap;
+	display: inline-block;
+	border-radius: 3px;
 }
 
+.rightBox {
+	float: right;
+}
 .commit-head-container {
 	background-color: #438a43;
 	white-space: nowrap;
@@ -221,28 +233,31 @@ div.appRoot {
 	background-color: gray;
 }
 
-.commit-remote-container .refs,
-.commit-tag-container .refs,
-.commit-head-container .refs {
-	display: block;
+.commit-remote-container.refs,
+.commit-tag-container.refs,
+.commit-head-container.refs{
 	color: white;
 	font-size: 75%;
-    padding: 0.3em;
-    display: flex;
+	padding: 1px 6px;
+	float: left;
+	margin: 0 6px 0 0;
+	border-radius: 3px;
+	display: flex;
+	align-items: center;
 }
 
-.commit-remote-container .refs span,
-.commit-tag-container .refs span,
-.commit-head-container .refs span {
-    text-overflow: ellipsis;
-    overflow-x: hidden;
-    display: inline-block;
+.refs.commit-remote-container span,
+.refs.commit-tag-container span,
+.refs.commit-head-container span {
+	text-overflow: ellipsis;
+	display: flex;
+	align-items: center;
 }
 
-.commit-remote-container .refs span:first-of-type,
-.commit-tag-container .refs span:first-of-type,
-.commit-head-container .refs span:first-of-type {
-    padding-right:0.5em;
+.refs.commit-remote-container svg,
+.refs.commit-tag-container svg,
+.refs.commit-head-container svg {
+	margin-right:0.2em;
 }
 
 .commit-hash-container .commit-hash,
@@ -304,10 +319,15 @@ div.appRoot {
 
 .sha-code {
 	font-family: Consolas, 'Courier New', monospace;
+	font-family: 0.8em;
 }
 
 .sha-code.short {
 	width: 7em;
+}
+
+.log-entry.active {
+	background-color: #000;
 }
 
 .log-entry.active .commit-hash-container {
@@ -530,9 +550,26 @@ div.details-view-cnt {
 	position: relative;
 }
 
+.commit-date,
+.commit-authoronly,
+.commit-hash-container,
+.commit-subject {
+	/* border: #7d3d40 1px solid; */
+	padding: 2px 6px;
+	font-size: 0.8em;
+	font-weight: normal;
+}
+
 .committed-files .file-name, .file-name {
 	display: inline-block;
 	padding-left: 0.5em;
+}
+
+/* Hack to unsure consistent row sizing when .refs elements do not exist */
+span.spacer {
+	height: 18px;
+	width: 1px;
+	float: left;
 }
 
 .committed-files a.file-name, a.file-name {

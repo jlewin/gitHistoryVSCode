@@ -230,7 +230,22 @@ function drawGitGraph(svg: SVGSVGElement, content: HTMLElement, startAt: number,
             tabbedOnce = true;
         }
 
+        let halfHeight = logEntryHeight / 2;
+
+        // Enable for troubleshooting svg/dom element alignment
+        if (false) {
+            let svgLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            svgLine.setAttribute('x1', '0');
+            svgLine.setAttribute('x2', '50');
+            svgLine.setAttribute('y1', (currentY - halfHeight).toString());
+            svgLine.setAttribute('y2', (currentY - halfHeight).toString());
+            svgLine.style.stroke = "rgb(255,0,0)";
+            svgLine.style.strokeWidth = '0.5';
+            svg.appendChild(svgLine);
+        }
+
         let svgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+
         let cx = ((branchFound || i === 0 ? index : branches.length - 1) + 1) * xOffset;
         if (xFromFictionalBranch > 0) {
             cx = xFromFictionalBranch;
@@ -262,6 +277,9 @@ function drawGitGraph(svg: SVGSVGElement, content: HTMLElement, startAt: number,
             }
         }
     }
+
+    let totalLeft = 0;
+
     for (let i = startAt; i < content.children.length; ++i) {
         let element = content.children[i];
         if (i >= entries.length) {
@@ -269,11 +287,24 @@ function drawGitGraph(svg: SVGSVGElement, content: HTMLElement, startAt: number,
         }
         let minLeft = Math.min(maxLeft, 3);
         let left = element ? Math.max(minLeft, (element as any).branchesOnLeft) : minLeft;
-        element.setAttribute('style', element.getAttribute('style') + ';padding-left:' + (left + 1) * lastXOffset + 'px');
+
+        var existingStyle = element.getAttribute('style');
+
+        let thisLeft = (left + 1) * lastXOffset;
+
+        if (existingStyle) {
+            element.setAttribute('style', existingStyle + ';padding-left:' + thisLeft + 'px');
+        } else {
+            element.setAttribute('style', 'padding-left:' + thisLeft + 'px');
+        }
+
+        totalLeft = Math.max(thisLeft, totalLeft);
     }
     branches.forEach(branch => {
         branch.path.setAttribute('d', branch.path.cmds + currentY);
     });
+
+    svg.setAttribute('width', totalLeft);
 
     // Commented only fo debugging
     // circlesToAppend.forEach(svg.appendChild.bind(svg));
@@ -326,8 +357,10 @@ class BrachGraph extends React.Component<BranchGrapProps> {
             lastHash: newProps.logEntries.length > 0 ? newProps.logEntries[newProps.logEntries.length - 1].hash.full : '',
         };
 
+        debugger;
+
         this.svg.setAttribute('height', newProps.height);
-        this.svg.setAttribute('width', newProps.width);
+        //this.svg.setAttribute('width', newProps.width);
 
         // Hack, first clear before rebuilding.
         // Remember, we will need to support apending results, as opposed to clearing page

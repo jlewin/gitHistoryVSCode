@@ -4,13 +4,9 @@ import * as React from 'react';
 const octicons = require('octicons');
 
 export default function HeadRef(props: Ref) {
-    const svg = { __html: octicons["git-branch"].toSVG() };
-    return (<div className='media-image ref'>
-        <div className='commit-head-container'>
-            <div className='refs'>
+    const svg = { __html: octicons["git-branch"].toSVG({ "viewBox": '0 0 14 16' }) };
+    return (<div className='refs commit-head-container'>
                 <span dangerouslySetInnerHTML={svg} />
                 <span title={props.name}>{props.name}</span>
-            </div>
-        </div>
-    </div>);
+            </div>);
 }

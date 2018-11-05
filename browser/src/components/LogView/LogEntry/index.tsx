@@ -3,7 +3,8 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { connect } from 'react-redux';
 import { LogEntry, Ref, RefType } from '../../../definitions';
 import { RootState } from '../../../reducers/index';
-import Author from '../Commit/Author';
+import AuthorOnly from '../Commit/AuthorOnly';
+import CommitDate from '../Commit/CommitDate';
 import Avatar from '../Commit/Avatar';
 import { gitmojify } from '../gitmojify';
 import HeadRef from '../Refs/Head';
@@ -49,10 +50,12 @@ function LogEntry(props: ResultListProps) {
     const isActive = props.selected && props.logEntry && props.selected.hash.full === props.logEntry.hash.full;
     const cssClassName = `log-entry ${isActive ? 'active' : ''}`;
     return (<div className={cssClassName}>
-        <div className='media right'>
-            <div className='media-image'>
+            <div className='rightBox'>
+                <AuthorOnly result={props.logEntry.author}></AuthorOnly>
+                <CommitDate result={props.logEntry.author}></CommitDate>
+                {renderTagRef(props.logEntry.refs)}
                 <div className='commit-hash-container'>
-                    <CopyToClipboard text={props.logEntry.hash.full}>
+                    {/* <CopyToClipboard text={props.logEntry.hash.full}>
                         <div className='copy-button'>
                             <span className='btnx clipboard hint--left hint--rounded hint--bounce'
                                 aria-label='Copy the full Hash'>
@@ -66,21 +69,23 @@ function LogEntry(props: ResultListProps) {
                                 <GoGitCommit></GoGitCommit>
                             </a>
                         </span>
-                    </div>
-                    <div role='button' className='commit-hash' onClick={() => props.onViewCommit(props.logEntry)}>
+                    </div> */}
+                    <div onClick={() => props.onViewCommit(props.logEntry)}>
                         <span className='sha-code short' aria-label={props.logEntry.hash.short}>{props.logEntry.hash.short}</span>
                     </div>
                 </div>
             </div>
-            {renderRemoteRefs(props.logEntry.refs)}
-            {renderHeadRef(props.logEntry.refs)}
-            {renderTagRef(props.logEntry.refs)}
+
             <div role='button' className='media-content' onClick={() => props.onViewCommit(props.logEntry)}>
-                <Avatar result={props.logEntry.author}></Avatar>
+                {renderRemoteRefs(props.logEntry.refs)}
+                {renderHeadRef(props.logEntry.refs)}
+
+                {/* <Avatar result={props.logEntry.author}></Avatar> */}
+
+                <span className='heightHack'></span>
+
                 <div className='commit-subject' title={gitmojify(props.logEntry.subject)}>{gitmojify(props.logEntry.subject)}</div>
-                <Author result={props.logEntry.author}></Author>
             </div>
-        </div>
     </div>);
 }
 

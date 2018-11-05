@@ -52,13 +52,11 @@ export default class LogEntryList extends React.Component<ResultProps> {
         }
 
         const results = this.props.logEntries.map(entry =>
-            <Element name={entry.hash.full} className='myItem' key={entry.hash.full}>
-                <LogEntryView
-                    key={entry.hash.full}
-                    logEntry={entry}
-                    onViewCommit={this.props.onViewCommit}
-                    onClick={this.props.onClick} />
-            </Element>
+            <LogEntryView
+                key={entry.hash.full}
+                logEntry={entry}
+                onViewCommit={this.props.onViewCommit}
+                onClick={this.props.onClick} />
         );
         return (
             // tslint:disable-next-line:react-this-binding-issue
